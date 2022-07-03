@@ -54,7 +54,7 @@ extension TypeMetadata {
     case let enumMetadata as EnumMetadata:
       return enumMetadata.descriptor
     case let classMetadata as ClassMetadata:
-      return classMetadata.descriptor
+      return classMetadata.descriptor!
     default:
       fatalError("Unknown TypeMetadata conformance")
     }
@@ -83,7 +83,7 @@ extension TypeMetadata {
       return ptr + MemoryLayout<_EnumMetadata>.size
       
     case let classMetadata as ClassMetadata:
-      return ptr.offset(of: classMetadata.descriptor.genericArgumentOffset)
+      return ptr.offset(of: classMetadata.descriptor!.genericArgumentOffset)
       
     default:
       fatalError("Unknown TypeMetadata conformance")

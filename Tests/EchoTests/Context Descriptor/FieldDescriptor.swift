@@ -16,7 +16,7 @@ enum FieldDescriptorTests {
   
   static func testClass() throws {
     let metadata = reflectClass(FieldTesting.self)!
-    let fields = metadata.descriptor.fields
+    let fields = metadata.descriptor!.fields
     
     XCTAssert(fields.hasMangledTypeName)
     XCTAssertEqual(fields.kind, .class)

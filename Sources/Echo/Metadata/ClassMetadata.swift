@@ -108,7 +108,11 @@ public struct ClassMetadata: TypeMetadata, LayoutWrapper {
   
   /// An array of field offsets for this class's stored representation.
   public var fieldOffsets: [Int] {
-    Array(unsafeUninitializedCapacity: descriptor.numFields) {
+    guard let descriptor = descriptor else {
+        return []
+    }
+    
+    return Array(unsafeUninitializedCapacity: descriptor.numFields) {
       let start = ptr.offset(of: descriptor.fieldOffsetVectorOffset)
       
       for i in 0 ..< descriptor.numFields {
