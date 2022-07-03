@@ -23,9 +23,14 @@ public struct ClassMetadata: TypeMetadata, LayoutWrapper {
   public let ptr: UnsafeRawPointer
   
   /// The class context descriptor that describes this class.
-  public var descriptor: ClassDescriptor {
+  public var descriptor: ClassDescriptor? {
     precondition(isSwiftClass)
-    return ClassDescriptor(ptr: layout._descriptor.signed)
+    
+    if let descriptorPtr = layout._descriptor.signed {
+        return ClassDescriptor(ptr: descriptorPtr)
+    }
+    
+    return nil
   }
   
   /// The Objective-C ISA pointer, if it has one.
