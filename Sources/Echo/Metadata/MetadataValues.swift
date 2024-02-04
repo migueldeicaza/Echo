@@ -174,6 +174,21 @@ extension FunctionMetadata {
     public var isEscaping: Bool {
       bits & 0x4000000 != 0
     }
+      
+    /// Whether this function is async or not
+    public var isAsync: Bool {
+      bits & 0x20000000 != 0
+    }
+      
+    /// Whether this function is sendable or not
+    public var isSendable: Bool {
+      bits & 0x40000000 != 0
+    }
+      
+    ///
+    public var hasGlobalActor: Bool {
+      bits & 0x10000000 != 0
+    }
   }
 }
 

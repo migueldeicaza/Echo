@@ -76,6 +76,14 @@ public struct FunctionMetadata: Metadata, LayoutWrapper {
       $1 = flags.numParams
     }
   }
+  public var globalActor: Any.Type {
+    let start = trailing
+      .offset(of: flags.numParams)
+      .advanced(by: flags.numParams * MemoryLayout<ParamFlags>.stride)
+    return start
+      .assumingMemoryBound(to: Any.Type.self)
+      .pointee
+  }
 }
 
 extension FunctionMetadata: Equatable {}
