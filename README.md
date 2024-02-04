@@ -1,10 +1,9 @@
 # Echo
 
-[![Build Status](https://travis-ci.com/Azoy/Echo.svg?branch=main)](https://travis-ci.com/github/Azoy/Echo/pull_requests)
+This is a fork of https://github.com/Azoy/Echo where I tried to bring all the patches
+that have been applied in the network of commits and were not upstreamed.
 
 A complete reflection package for Swift.
-
-Documentation: [Echo Wiki](https://github.com/Azoy/Echo/wiki)
 
 ## Installation
 
