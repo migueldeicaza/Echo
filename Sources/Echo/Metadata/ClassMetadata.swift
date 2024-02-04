@@ -16,6 +16,8 @@
 ///
 public struct ClassMetadata: TypeMetadata, LayoutWrapper {
   typealias Layout = _ClassMetadata
+    
+  public typealias SIMP = @convention(c) () -> Void
   
   /// Backing class metadata pointer.
   public let ptr: UnsafeRawPointer
@@ -116,6 +118,20 @@ public struct ClassMetadata: TypeMetadata, LayoutWrapper {
       $1 = descriptor.numFields
     }
   }
+    
+  public var vtable: [UnsafeMutablePointer<SIMP?>] {
+    let start = address(for: \._ivarDestroyer).assumingMemoryBound(to: SIMP?.self)
+    let end = ptr
+      .advanced(by: -Int(layout._classAddressPoint) + Int(layout._classSize))
+      .assumingMemoryBound(to: SIMP?.self)
+  
+    var table = [UnsafeMutablePointer<SIMP?>]()
+    for index in 0..<(end - start) {
+      table.append(.init(mutating: start.advanced(by: index)))
+    }
+  
+  return table
+  }
 }
 
 extension ClassMetadata: Equatable {}
@@ -133,5 +149,5 @@ struct _ClassMetadata {
   let _classSize: UInt32
   let _classAddressPoint: UInt32
   let _descriptor: SignedPointer<ClassDescriptor>
-  let _ivarDestroyer: UnsafeRawPointer
+  let _ivarDestroyer: UnsafeRawPointer?
 }

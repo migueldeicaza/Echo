@@ -91,7 +91,7 @@ func getContextDescriptor(
   let ptr = __ptrauth_strip_asda(ptr)!
   #endif
   
-  let flags = ptr.load(as: ContextDescriptorFlags.self)
+  let flags = ptr.loadUnaligned(as: ContextDescriptorFlags.self)
   
   switch flags.kind {
   case .anonymous:

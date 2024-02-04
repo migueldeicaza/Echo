@@ -9,6 +9,15 @@ class Boat {
     self.name = name
     self.designDate = designDate
   }
+  public func printName() -> String {
+    print(name)
+    return name
+  }
+  
+  public func printDesignDate() -> String {
+    print(designDate)
+    return "\(designDate)"
+  }
 }
 
 class Boat2<T, U> {
@@ -126,6 +135,33 @@ enum ClassMetadataTests {
     XCTAssertEqual(metadata.isSwiftClass, false)
   }
   #endif
+  static func testVtable() {
+    let boat = Boat(name: "hello", designDate: 5)
+    let maybeMetadata = reflectClass(Boat.self)
+    XCTAssertNotNil(maybeMetadata)
+  
+    var printName: UnsafeMutablePointer<ClassMetadata.SIMP?>?
+    var printDesignDate:  UnsafeMutablePointer<ClassMetadata.SIMP?>?
+  
+    XCTAssertEqual(boat.printName(), "hello")
+  
+    let metadata = maybeMetadata!
+    for entry in metadata.vtable {
+      var info = Dl_info()
+      if dladdr(unsafeBitCast(entry.pointee, to: UnsafeRawPointer.self), &info) != 0,
+          let snameC = info.dli_sname {
+          let sname = String(cString: snameC)
+          if sname.contains("printName") { printName = entry }
+          if sname.contains("printDesignDate") { printDesignDate = entry }
+      }
+    }
+  
+    if let printDesignDate {
+      printName?.pointee = printDesignDate.pointee
+    }
+  
+    XCTAssertEqual(boat.printName(), "5")
+  }
 }
 
 extension EchoTests {
@@ -135,5 +171,6 @@ extension EchoTests {
     #if canImport(ObjectiveC)
     try ClassMetadataTests.testObjCClass()
     #endif
+    ClassMetadataTests.testVtable()
   }
 }
